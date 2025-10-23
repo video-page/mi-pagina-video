@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Descarga tu video</title>
+  <style>
+    :root{
+      --accent: #00bcd4;
+      --bg1: #0b0b0b;
+      --bg2: #141414;
+      --muted: #9aa6ad;
+    }
+    *{box-sizing:border-box}
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background: linear-gradient(135deg, var(--bg1) 0%, var(--bg2) 100%);
+      color: #fff;
+      overflow: hidden;
+      padding: 24px;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 820px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border: 1px solid rgba(255,255,255,0.04);
+      border-radius: 14px;
+      padding: 36px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(2,6,23,0.6);
+      backdrop-filter: blur(6px);
+    }
+
+    h1{
+      margin: 0 0 18px 0;
+      color: var(--accent);
+      font-size: 1.7rem;
+      letter-spacing: 0.2px;
+      opacity: 0;
+      transform: translateY(-8px);
+      animation: appear 600ms cubic-bezier(.2,.9,.3,1) forwards;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      margin-bottom: 26px;
+      font-size: 0.95rem;
+      opacity: 0;
+      transform: translateY(-6px);
+      animation: appear 600ms 160ms cubic-bezier(.2,.9,.3,1) forwards;
+    }
+
+    /* Botón */
+    .download-btn {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 12px 28px;
+      border-radius: 10px;
+      background: linear-gradient(90deg,var(--accent), #00a7b7);
+      color: #061118;
+      font-weight: 600;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(0,188,212,0.12);
+      transform: translateY(8px);
+      opacity: 0;
+      transition: transform .25s ease, box-shadow .2s ease, opacity .25s ease;
+      animation: appear 600ms 320ms cubic-bezier(.2,.9,.3,1) forwards;
+    }
+
+    .download-btn.locked {
+      opacity: 0.6;
+      cursor: not-allowed;
+      filter: grayscale(.06);
+      box-shadow: none;
+    }
+
+    .note {
+      margin-top: 14px;
+      color: #9fb3b9;
+      font-size: 0.9rem;
+      opacity: 0;
+      transform: translateY(-6px);
+      animation: appear 600ms 420ms cubic-bezier(.2,.9,.3,1) forwards;
+    }
+
+    /* Contenedor visual del video */
+    .video-preview {
+      margin: 22px auto;
+      width: 100%;
+      max-width: 680px;
+      height: 380px;
+      border-radius: 10px;
+      background: linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.6));
+      border: 1px solid rgba(255,255,255,0.03);
+      box-shadow: 0 6px 20px rgba(2,6,23,0.6);
+      opacity: 0;
+      transform: translateY(6px);
+      animation: appear 600ms 220ms cubic-bezier(.2,.9,.3,1) forwards;
+    }
+
+    @keyframes appear {
+      from { opacity:0; transform: translateY(8px); }
+      to { opacity:1; transform: translateY(0); }
+    }
+
+    /* Responsivo */
+    @media (max-width:720px){
+      .video-preview { height: 220px }
+      .card { padding: 22px }
+      h1{ font-size:1.4rem}
+    }
+  </style>
+</head>
+<body>
+  <div class="card" id="card">
+    <h1>🚀 Descarga acá el video</h1>
+    <div class="subtitle">Para desbloquear la descarga debes visitar 4 veces el enlace. Haz clic en cualquier parte de la página.</div>
+
+    <!-- Contenedor visual (sin texto) -->
+    <div class="video-preview"></div>
+
+    <a id="downloadBtn" class="download-btn locked" href="#" target="_blank" rel="noopener">Descargar video</a>
+
+    <div class="note" id="msg">Clic 0 de 4 para desbloquear</div>
+  </div>
+
+  <script>
+    // --- CONFIGURA AQUI ---
+    const enlacePublicidad = "https://otieu.com/4/10075864"; // reemplázalo por tu link
+    const enlaceDescarga = "https://drive.google.com/uc?export=download&id=1nyN_-WxwXtBSLKmKvTURX8qs76ZlxZml"; // tu id de Drive
+    const limiteClics = 4;
+    // -----------------------
+
+    const downloadBtn = document.getElementById('downloadBtn');
+    const msg = document.getElementById('msg');
+    let contador = 0;
+    let bloqueoTemp = false;
+
+    document.addEventListener('click', function (e) {
+      if (!downloadBtn.classList.contains('locked')) {
+        if (e.target.closest && e.target.closest('#downloadBtn')) return;
+      }
+
+      if (bloqueoTemp) return;
+
+      if (contador < limiteClics) {
+        contador++;
+        msg.textContent = `Clic ${contador} de ${limiteClics} para desbloquear`;
+
+        try {
+          window.open(enlacePublicidad, '_blank', 'noopener,noreferrer');
+        } catch (err) {
+          console.warn('No se pudo abrir la pestaña automáticamente:', err);
+        }
+
+        bloqueoTemp = true;
+        setTimeout(()=> bloqueoTemp = false, 800);
+      }
+
+      if (contador >= limiteClics) {
+        downloadBtn.classList.remove('locked');
+        downloadBtn.href = enlaceDescarga;
+        msg.textContent = '✅ Descarga desbloqueada — haz clic en "Descargar video"';
+      }
+    }, { passive: true });
+  </script>
+</body>
+</html>
