@@ -46,6 +46,39 @@
             color: #00ffff;
         }
 
+        /* Tabs Navigation */
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin: 2rem 0;
+            gap: 1rem;
+        }
+
+        .tab-btn {
+            background: linear-gradient(135deg, #2d2d2d 0%, #444 100%);
+            color: #ffffff;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid #444;
+        }
+
+        .tab-btn:hover {
+            background: linear-gradient(135deg, #00ffff 0%, #0080ff 100%);
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(0, 255, 255, 0.4);
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #00ffff 0%, #0080ff 100%);
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(0, 255, 255, 0.4);
+        }
+
         /* Welcome Section */
         .welcome-section {
             text-align: center;
@@ -154,7 +187,7 @@
             font-style: italic;
         }
 
-        .download-btn {
+        .watch-btn {
             background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
             color: #ffffff;
             padding: 12px 25px;
@@ -168,17 +201,17 @@
             opacity: 0.7;
         }
 
-        .download-btn.unlocked {
+        .watch-btn.unlocked {
             background: linear-gradient(135deg, #00ffff 0%, #0080ff 100%);
             opacity: 1;
             transform: scale(1.02);
         }
 
-        .download-btn:hover:not(.unlocked) {
+        .watch-btn:hover:not(.unlocked) {
             opacity: 0.8;
         }
 
-        .download-btn:hover.unlocked {
+        .watch-btn:hover.unlocked {
             transform: scale(1.05);
             box-shadow: 0 5px 20px rgba(0, 255, 255, 0.4);
         }
@@ -220,6 +253,15 @@
             font-size: 0.9rem;
             margin-top: 0.5rem;
         }
+
+        /* Hidden content */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -232,8 +274,14 @@
         </div>
     </header>
 
-    <!-- Welcome Section -->
-    <section class="welcome-section">
+    <!-- Tabs Navigation -->
+    <div class="tabs">
+        <button class="tab-btn active" onclick="changeTab('models')">Modelos</button>
+        <button class="tab-btn" onclick="changeTab('animated')">Animados</button>
+    </div>
+
+    <!-- Welcome Section for Models -->
+    <section class="welcome-section tab-content active" id="modelsWelcome">
         <div class="container">
             <h1 class="welcome-title">Bienvenido</h1>
             <p class="welcome-message">En este espacio podrás encontrar a nuestras modelos y sus videos privados completos</p>
@@ -242,12 +290,32 @@
         </div>
     </section>
 
-    <!-- Videos Section -->
-    <section class="videos-section">
+    <!-- Welcome Section for Animated -->
+    <section class="welcome-section tab-content" id="animatedWelcome">
         <div class="container">
-            <h2 class="section-title">Videos Disponibles</h2>
-            <div class="videos-grid" id="videosGrid">
+            <h1 class="welcome-title">Bienvenido</h1>
+            <p class="welcome-message">En este espacio podrás encontrar videos animados completos</p>
+            <p class="welcome-message">Disfruta</p>
+            <h2 class="welcome-subtitle">🎬 Contenido Exclusivo 🎬</h2>
+        </div>
+    </section>
+
+    <!-- Videos Section for Models -->
+    <section class="videos-section tab-content active" id="modelsVideos">
+        <div class="container">
+            <h2 class="section-title">Videos de Modelos Disponibles</h2>
+            <div class="videos-grid" id="modelsVideosGrid">
                 <!-- Los videos se generarán automáticamente con JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Videos Section for Animated -->
+    <section class="videos-section tab-content" id="animatedVideos">
+        <div class="container">
+            <h2 class="section-title">Videos Animados Próximamente</h2>
+            <div class="videos-grid" id="animatedVideosGrid">
+                <!-- Los videos animados se generarán automáticamente con JavaScript -->
             </div>
         </div>
     </section>
@@ -264,11 +332,11 @@
         // ⚠️ **IMPORTANTE: CAMBIA ESTA VERSIÓN cuando actualices el código**
         const VERSION = "1.0";
 
-        // Configuración de links - ¡MODIFICA AQUÍ TUS LINKS!
+        // Configuración de links para modelos - ¡MODIFICA AQUÍ TUS LINKS!
         const videoConfig = {
             1: {
                 title: "Video 1",
-                description: "Descripción. Haz clic en el botón de descarga y completa los 3 clics para desbloquear el video.",
+                description: "Descripción. Haz clic en el botón de ver video y completa los 3 clics para desbloquear el video.",
                 driveLink: "https://drive.google.com/uc?export=download&id=1CjnafnhNwUMUYDqQKOKc-abHkAZiYAft",
                 sponsorLinks: [
                     "https://otieu.com/4/10075876",  // Primer clic
@@ -279,7 +347,7 @@
             },
             2: {
                 title: "Video 2",
-                description: "Descripción. Haz clic en el botón de descarga y completa los 3 clics para desbloquear el video.",
+                description: "Descripción. Haz clic en el botón de ver video y completa los 3 clics para desbloquear el video.",
                 driveLink: "https://drive.google.com/uc?export=download&id=1obsQ9FDh_qu__EoXuXGFA5uIIr8vCgfH",
                 sponsorLinks: [
                     "https://otieu.com/4/10075864",  // Primer clic
@@ -290,7 +358,7 @@
             },
             3: {
                 title: "Video 3",
-                description: "Descripción. Haz clic en el botón de descarga y completa los 3 clics para desbloquear el video.",
+                description: "Descripción. Haz clic en el botón de ver video y completa los 3 clics para desbloquear el video.",
                 driveLink: "https://drive.google.com/uc?export=download&id=1Dgwb_ELNEDn9k-mDWeUhPIr094ytZ3zt",
                 sponsorLinks: [
                     "https://otieu.com/4/10075876",  // Primer clic
@@ -301,7 +369,7 @@
             },
             4: {
                 title: "Video 4",
-                description: "Descripción. Haz clic en el botón de descarga y completa los 3 clics para desbloquear el video.",
+                description: "Descripción. Haz clic en el botón de ver video y completa los 3 clics para desbloquear el video.",
                 driveLink: "https://drive.google.com/uc?export=download&id=14mpqmsXHSfNxLEwMmbyxbAhTTSO3qTzw",
                 sponsorLinks: [
                     "https://otieu.com/4/10075864",  // Primer clic
@@ -312,7 +380,7 @@
             },
             5: {
                 title: "Video 5",
-                description: "Descripción. Haz clic en el botón de descarga y completa los 3 clics para desbloquear el video.",
+                description: "Descripción. Haz clic en el botón de ver video y completa los 3 clics para desbloquear el video.",
                 driveLink: "https://drive.google.com/uc?export=download&id=13i360fYW51b6jYgbdSDtfu9HvxGqQDRy",
                 sponsorLinks: [
                     "https://otieu.com/4/10075876",  // Primer clic
@@ -323,7 +391,7 @@
             },
             6: {
                 title: "Video 6",
-                description: "Descripción. Haz clic en el botón de descarga y completa los 3 clics para desbloquear el video.",
+                description: "Descripción. Haz clic en el botón de ver video y completa los 3 clics para desbloquear el video.",
                 driveLink: "https://drive.google.com/uc?export=download&id=1IuqPVdikvhMaiLWNwD5VbsIHQf3Dim7J",
                 sponsorLinks: [
                     "https://otieu.com/4/10075864",  // Primer clic
@@ -334,7 +402,7 @@
             },
             7: {
                 title: "Video 7",
-                description: "Descripción. Haz clic en el botón de descarga y completa los 3 clics para desbloquear el video.",
+                description: "Descripción. Haz clic en el botón de ver video y completa los 3 clics para desbloquear el video.",
                 driveLink: "https://drive.google.com/uc?export=download&id=1tXbGhkYIKj5PEkolM5q8OMozM86Y2rd9",
                 sponsorLinks: [
                     "https://otieu.com/4/10075876",  // Primer clic
@@ -345,7 +413,7 @@
             },
             8: {
                 title: "Video 8",
-                description: "Descripción. Haz clic en el botón de descarga y completa los 3 clics para desbloquear el video.",
+                description: "Descripción. Haz clic en el botón de ver video y completa los 3 clics para desbloquear el video.",
                 driveLink: "https://drive.google.com/uc?export=download&id=192AlTiEQSN5IidQfF4G0w-qW1kvf7EVL",
                 sponsorLinks: [
                     "https://otieu.com/4/10075864",  // Primer clic
@@ -356,7 +424,7 @@
             },
             9: {
                 title: "Video 9",
-                description: "Descripción. Haz clic en el botón de descarga y completa los 3 clics para desbloquear el video.",
+                description: "Descripción. Haz clic en el botón de ver video y completa los 3 clics para desbloquear el video.",
                 driveLink: "https://drive.google.com/uc?export=download&id=13Pg0zorPDcvOJY5WS6mjwoERetWGB0_r",
                 sponsorLinks: [
                     "https://otieu.com/4/10075876",  // Primer clic
@@ -367,7 +435,7 @@
             },
             10: {
                 title: "Video 10",
-                description: "Descripción. Haz clic en el botón de descarga y completa los 3 clics para desbloquear el video.",
+                description: "Descripción. Haz clic en el botón de ver video y completa los 3 clics para desbloquear el video.",
                 driveLink: "https://drive.google.com/uc?export=download&id=1UKCp0kIR9aFY7vF20wYNcgGCPvuHiGiA",
                 sponsorLinks: [
                     "https://otieu.com/4/10075864",  // Primer clic
@@ -378,7 +446,7 @@
             },
             11: {
                 title: "Video 11",
-                description: "Descripción. Haz clic en el botón de descarga y completa los 3 clics para desbloquear el video.",
+                description: "Descripción. Haz clic en el botón de ver video y completa los 3 clics para desbloquear el video.",
                 driveLink: "https://drive.google.com/uc?export=download&id=1GWAxpwoCpf_tVwJ1rdJtY6xai6QlcpjF",
                 sponsorLinks: [
                     "https://otieu.com/4/10075876",  // Primer clic
@@ -389,7 +457,7 @@
             },
             12: {
                 title: "Video 12",
-                description: "Descripción. Haz clic en el botón de descarga y completa los 3 clics para desbloquear el video.",
+                description: "Descripción. Haz clic en el botón de ver video y completa los 3 clics para desbloquear el video.",
                 driveLink: "https://drive.google.com/uc?export=download&id=1uZ4Hc7wxKsShpd4J7vqDGqF2lKue9XUp",
                 sponsorLinks: [
                     "https://otieu.com/4/10075864",  // Primer clic
@@ -400,7 +468,7 @@
             },
             13: {
                 title: "Video 13",
-                description: "Descripción. Haz clic en el botón de descarga y completa los 3 clics para desbloquear el video.",
+                description: "Descripción. Haz clic en el botón de ver video y completa los 3 clics para desbloquear el video.",
                 driveLink: "https://drive.google.com/uc?export=download&id=1hFG6eU7BOVOYjwsowUnXsq3TZpNLncIW",
                 sponsorLinks: [
                     "https://otieu.com/4/10075876",  // Primer clic
@@ -411,7 +479,7 @@
             },
             14: {
                 title: "Video 14",
-                description: "Descripción. Haz clic en el botón de descarga y completa los 3 clics para desbloquear el video.",
+                description: "Descripción. Haz clic en el botón de ver video y completa los 3 clics para desbloquear el video.",
                 driveLink: "https://drive.google.com/uc?export=download&id=1oCoY5AEuAICf8dGKKAzvQtfr1Nmxf7UV",
                 sponsorLinks: [
                     "https://otieu.com/4/10075864",  // Primer clic
@@ -422,7 +490,7 @@
             },
             15: {
                 title: "Video 15",
-                description: "Descripción. Haz clic en el botón de descarga y completa los 3 clics para desbloquear el video.",
+                description: "Descripción. Haz clic en el botón de ver video y completa los 3 clics para desbloquear el video.",
                 driveLink: "https://drive.google.com/uc?export=download&id=167dXN3pZqZtrX_h9XflCRb3-_v6oWCqq",
                 sponsorLinks: [
                     "https://otieu.com/4/10075876",  // Primer clic
@@ -433,7 +501,7 @@
             },
             16: {
                 title: "Video 16",
-                description: "Descripción. Haz clic en el botón de descarga y completa los 3 clics para desbloquear el video.",
+                description: "Descripción. Haz clic en el botón de ver video y completa los 3 clics para desbloquear el video.",
                 driveLink: "https://drive.google.com/uc?export=download&id=1elJbSwHfZb-idFScVqBvB9I7oAi4Ib1j",
                 sponsorLinks: [
                     "https://otieu.com/4/10075864",  // Primer clic
@@ -444,7 +512,7 @@
             },
             17: {
                 title: "Video 17",
-                description: "Descripción. Haz clic en el botón de descarga y completa los 3 clics para desbloquear el video.",
+                description: "Descripción. Haz clic en el botón de ver video y completa los 3 clics para desbloquear el video.",
                 driveLink: "https://drive.google.com/uc?export=download&id=1MIqB1JxqdDvLaLNOBVjarVM2DSBKX3IU",
                 sponsorLinks: [
                     "https://otieu.com/4/10075876",  // Primer clic
@@ -455,7 +523,7 @@
             },
             18: {
                 title: "Video 18",
-                description: "Descripción. Haz clic en el botón de descarga y completa los 3 clics para desbloquear el video.",
+                description: "Descripción. Haz clic en el botón de ver video y completa los 3 clics para desbloquear el video.",
                 driveLink: "https://drive.google.com/uc?export=download&id=1-csRnEReMtgUSe4kBg7h2OG3U8voQ-fq",
                 sponsorLinks: [
                     "https://otieu.com/4/10075864",  // Primer clic
@@ -466,7 +534,7 @@
             },
             19: {
                 title: "Video 19",
-                description: "Descripción. Haz clic en el botón de descarga y completa los 3 clics para desbloquear el video.",
+                description: "Descripción. Haz clic en el botón de ver video y completa los 3 clics para desbloquear el video.",
                 driveLink: "https://drive.google.com/uc?export=download&id=1y4jtTHuCXib3lSgF_wqMWnKUfUAB1wR6",
                 sponsorLinks: [
                     "https://otieu.com/4/10075876",  // Primer clic
@@ -477,7 +545,7 @@
             },
             20: {
                 title: "Video 20",
-                description: "Descripción. Haz clic en el botón de descarga y completa los 3 clics para desbloquear el video.",
+                description: "Descripción. Haz clic en el botón de ver video y completa los 3 clics para desbloquear el video.",
                 driveLink: "https://drive.google.com/uc?export=download&id=1mfHlKxEyciyk8hUWBJIQpHtmvWvRGIQa",
                 sponsorLinks: [
                     "https://otieu.com/4/10075864",  // Primer clic
@@ -488,13 +556,55 @@
             }
         };
 
+        // Configuración para videos animados
+        const animatedVideoConfig = {
+            1: { title: "Animado 1", description: "Increíble animación en 3D con efectos especiales.", available: false },
+            2: { title: "Animado 2", description: "Aventura épica con personajes fantásticos.", available: false },
+            3: { title: "Animado 3", description: "Comedia animada para toda la familia.", available: false },
+            4: { title: "Animado 4", description: "Ciencia ficción con animación de vanguardia.", available: false },
+            5: { title: "Animado 5", description: "Drama emocional con técnica tradicional.", available: false },
+            6: { title: "Animado 6", description: "Animación experimental con nuevas técnicas.", available: false },
+            7: { title: "Animado 7", description: "Fantasía medieval con dragones y magia.", available: false },
+            8: { title: "Animado 8", description: "Aventura espacial con aliens y naves.", available: false },
+            9: { title: "Animado 9", description: "Misterio animado con giros inesperados.", available: false },
+            10: { title: "Animado 10", description: "Romance animado con paisajes hermosos.", available: false },
+            11: { title: "Animado 11", description: "Acción y aventuras con héroes legendarios.", available: false },
+            12: { title: "Animado 12", description: "Animación educativa sobre naturaleza.", available: false },
+            13: { title: "Animado 13", description: "Thriller psicológico con animación única.", available: false },
+            14: { title: "Animado 14", description: "Musical animado con canciones originales.", available: false },
+            15: { title: "Animado 15", description: "Animación histórica sobre eventos importantes.", available: false },
+            16: { title: "Animado 16", description: "Comedia romántica con personajes carismáticos.", available: false },
+            17: { title: "Animado 17", description: "Aventura submarina con criaturas marinas.", available: false },
+            18: { title: "Animado 18", description: "Animación deportiva con emocionantes competiciones.", available: false },
+            19: { title: "Animado 19", description: "Fantasía urbana con elementos mágicos.", available: false },
+            20: { title: "Animado 20", description: "Animación artística con estilo único.", available: false }
+        };
+
         // Contadores de clics (SE REINICIAN al recargar la página)
         let clickCounters = {};
         const requiredClicks = 3;
 
-        // Función para generar los videos automáticamente
-        function generateVideos() {
-            const videosGrid = document.getElementById('videosGrid');
+        // Función para cambiar entre pestañas
+        function changeTab(tabName) {
+            // Ocultar todo el contenido
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Mostrar el contenido de la pestaña seleccionada
+            document.getElementById(tabName + 'Welcome').classList.add('active');
+            document.getElementById(tabName + 'Videos').classList.add('active');
+            
+            // Actualizar botones de pestañas
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        // Función para generar los videos de modelos
+        function generateModelsVideos() {
+            const videosGrid = document.getElementById('modelsVideosGrid');
             
             for (let i = 1; i <= 20; i++) {
                 const video = videoConfig[i];
@@ -515,8 +625,8 @@
                                    id="driveLink${i}" readonly>
                         </div>
                         
-                        <button class="download-btn" onclick="handleDownload(${i})" id="downloadBtn${i}">
-                            Descargar ${video.title}
+                        <button class="watch-btn" onclick="handleWatch(${i})" id="watchBtn${i}">
+                            Mirar ${video.title}
                         </button>
                         <div class="click-counter" id="clickCounter${i}">
                             Clics necesarios: <span id="clicksNeeded${i}">3</span>
@@ -542,9 +652,37 @@
             }
         }
 
-        // Función para manejar la descarga (SIEMPRE reinicia los clics)
-        function handleDownload(videoNumber) {
-            const downloadBtn = document.getElementById(`downloadBtn${videoNumber}`);
+        // Función para generar los videos animados
+        function generateAnimatedVideos() {
+            const videosGrid = document.getElementById('animatedVideosGrid');
+            
+            for (let i = 1; i <= 20; i++) {
+                const video = animatedVideoConfig[i];
+                const videoCard = document.createElement('div');
+                videoCard.className = 'video-card';
+                
+                if (video) {
+                    videoCard.innerHTML = `
+                        <h3>${video.title}</h3>
+                        <p class="video-description">${video.description}</p>
+                        
+                        <div class="coming-soon">
+                            Contenido animado en desarrollo
+                        </div>
+                        
+                        <button class="coming-soon-btn" disabled>
+                            Próximamente
+                        </button>
+                    `;
+                }
+                
+                videosGrid.appendChild(videoCard);
+            }
+        }
+
+        // Función para manejar la visualización (SIEMPRE reinicia los clics)
+        function handleWatch(videoNumber) {
+            const watchBtn = document.getElementById(`watchBtn${videoNumber}`);
             const clicksNeeded = document.getElementById(`clicksNeeded${videoNumber}`);
             const config = videoConfig[videoNumber];
 
@@ -557,11 +695,11 @@
                 clicksNeeded.textContent = requiredClicks - clickCounters[videoNumber];
 
                 if (clickCounters[videoNumber] === requiredClicks) {
-                    downloadBtn.classList.add('unlocked');
-                    downloadBtn.textContent = `¡Descargar ${config.title} Ahora!`;
+                    watchBtn.classList.add('unlocked');
+                    watchBtn.textContent = `¡Mirar ${config.title} Ahora!`;
                 }
             } else {
-                // Redirigir a la descarga de Google Drive
+                // Redirigir a la visualización de Google Drive
                 window.location.href = config.driveLink;
             }
         }
@@ -572,7 +710,8 @@
             document.getElementById('versionInfo').textContent = `Versión ${VERSION}`;
             
             // Generar todos los videos
-            generateVideos();
+            generateModelsVideos();
+            generateAnimatedVideos();
             
             console.log(`✅ Plataforma cargada - Versión ${VERSION}`);
             console.log('🔄 Los clics se reinician al recargar la página');
